@@ -55,7 +55,6 @@ def read_csv(sc):
 
     coef = rdd.map(lambda x: [i ** 2 for i in x]).reduce(sum_vect)
     coef = [x ** 0.5 for x in coef]
-    print(coef)
 
     def divide_vect(a):
         res = []
