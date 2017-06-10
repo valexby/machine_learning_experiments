@@ -1,11 +1,10 @@
 #!/usr/bin/env python
 import numpy as np
-from scipy.spatial.distance import euclidean
-import sys, pdb, seaborn, pandas, warnings, json 
+import sys, pdb, pandas, json 
 import matplotlib.pyplot as plt
 import theano
 import theano.tensor as T
-from theano import function, config, shared
+from theano import function, shared
 
 #warnings.filterwarnings("ignore")#For presentation only!
 
@@ -28,9 +27,6 @@ def klp_kmeans(raw_data, cluster_num, alpha, epochs = -1, batch = 1, verbose = F
             W - final cluster centroids
     '''
     data = raw_data.as_matrix()
-
-    #warnings.simplefilter("ignore", DeprecationWarning)
-    #warnings.filterwarnings("ignore")
 
     rng = np.random
     # From Kohonen's paper

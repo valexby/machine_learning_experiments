@@ -14,7 +14,7 @@ def visualize(rdd, model, iteration):
     tsne_representation = np.array(json.load(f))
     f.close()
 
-    labels = model.predict(rdd).collect()
+    labels = model.predict(rdd).collect() #Определяем кластеры для центроид
     labels = [colors[x] for x in labels]
 
     fig = plt.figure()
@@ -31,8 +31,8 @@ def read_csv(sc):
     rdd = rdd.zipWithIndex()
 
 
-    def prepare_vect(x):
-        ls = x[0].split(',')#Немного парсим RDD и выбрасываем из него добавленные раньше индексы.
+    def prepare_vect(x):#Функция, которая из троки csv таблицы делает вектор
+        ls = x[0].split(',')
         ls[head['churn']] = 0 if ls[head['churn']] == 'False' else 1
         ls[head['international plan']] = 0 if ls[head['international plan']] == 'no' else 1
         ls[head['voice mail plan']] = 0 if ls[head['voice mail plan']] == 'no' else 1
@@ -44,7 +44,7 @@ def read_csv(sc):
 
     rdd = rdd.filter(lambda x: x[1] != 0) #Выбрасываем из RDD вектор с названиями параметров.
     rdd = rdd.map(prepare_vect)
-    
+    #Далее нормирование векторов
     def sum_vect(a, b):
         res = []
         for i in range(len(a)):
@@ -69,9 +69,9 @@ def read_csv(sc):
 
 def main():
 
-    sc = spark.SparkContext()
+    sc = spark.SparkContext()#Инициализируем контекст, который налаживает соединение с кластером.
     rdd = read_csv(sc)
-    clusters = KMeans.train(rdd, 3, maxIterations=1)
+    clusters = KMeans.train(rdd, 3, maxIterations=1)#Одна итерация обучения выборкой
 
     visualize(rdd, clusters, 0)
     for i in range(1, 10):

@@ -1,18 +1,9 @@
 #!/usr/bin/env python
 import numpy as np
-from scipy.spatial.distance import euclidean
 import scipy.cluster.vq as vq
-import sys, pdb, seaborn, pandas, warnings, json
-from sklearn.manifold import TSNE
-from sklearn.preprocessing import StandardScaler
+import sys, pandas, json
 import sklearn.cluster as skl
 import matplotlib.pyplot as plt
-#warnings.filterwarnings("ignore")#For presentation only!
-
-K = 3 #Neurones number
-I = 10 #Kohonen's iterations number
-M = 100 #Number of teacher's vectors
-NU = 0.15 #Learninig speed coefficient
 
 
 def visualize(data, kmeans, iteration):
@@ -43,16 +34,14 @@ def main():
     data['international plan'] = data['international plan'].map(d)
     data['voice mail plan'] = data['voice mail plan'].map(d)
     data = data.drop(['state', 'area code', 'phone number'], axis=1)#Выкинул все ненужное, все нужные признаки сделал числовыми
-    pdb.set_trace()
     data = data / ((data ** 2).sum() ** 0.5)#Нормирую признаки
-    pdb.set_trace()
     
     #Первая кластеризация со случайными центроидами. Одна итерация алгоритма k-means
     kmeans = skl.KMeans(n_clusters=3, max_iter=1, init='random').fit(data.values)
     visualize(data, kmeans, 0)
     print(data.info())
 
-    for i in range(1, I):
+    for i in range(1, 10):
         #На каждой итерации производим k-means длинной в одну итерацию, и инициализируем центроиды результатами прошлой итерации
         init = kmeans.cluster_centers_
         print(init)
